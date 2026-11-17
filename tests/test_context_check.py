@@ -1,7 +1,8 @@
 import tempfile
 import unittest
 from pathlib import Path
-from scripts.check_context import validate, REQUIRED
+
+from scripts.check_context import REQUIRED, validate
 
 
 class ContextCheckTests(unittest.TestCase):
@@ -13,18 +14,12 @@ class ContextCheckTests(unittest.TestCase):
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text("# placeholder\n", encoding="utf-8")
         (root / "docs/adr/0000-template.md").write_text(
-            "# ADR-XXXX — Template\
-- **Status:** Proposed\
-"
-            "- **Superseded by:** None\
-## Context\
-A\
-"
-            "## Decision\
-B\
-## Consequences\
-C\
-",
+            "# ADR-XXXX — Template\n"
+            "- **Status:** Proposed\n"
+            "- **Superseded by:** None\n"
+            "## Context\nA\n"
+            "## Decision\nB\n"
+            "## Consequences\nC\n",
             encoding="utf-8",
         )
         return temporary, root
@@ -41,9 +36,13 @@ C\
         temporary, root = self.make_root()
         try:
             (root / "docs/adr/0001-example.md").write_text(
-                "# ADR-0001 — Example\n- **Status:** Accepted\n"
-                "- **Date:** 2026-11-17\n- **Superseded by:** None\n"
-                "## Context\nA\n## Decision\nB\n## Consequences\nC\n",
+                "# ADR-0001 — Example\n"
+                "- **Status:** Accepted\n"
+                "- **Date:** 2026-11-17\n"
+                "- **Superseded by:** None\n"
+                "## Context\nA\n"
+                "## Decision\nB\n"
+                "## Consequences\nC\n",
                 encoding="utf-8",
             )
             self.assertEqual(validate(root), [])
@@ -54,8 +53,11 @@ C\
         temporary, root = self.make_root()
         try:
             (root / "docs/adr/0001-example.md").write_text(
-                "# ADR-0001\n- **Status:** Unknown\n"
-                "## Context\nA\n## Decision\nB\n## Consequences\nC\n",
+                "# ADR-0001\n"
+                "- **Status:** Unknown\n"
+                "## Context\nA\n"
+                "## Decision\nB\n"
+                "## Consequences\nC\n",
                 encoding="utf-8",
             )
             self.assertTrue(any("Status" in error for error in validate(root)))
