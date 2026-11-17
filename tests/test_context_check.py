@@ -12,6 +12,21 @@ class ContextCheckTests(unittest.TestCase):
             path = root / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text("# placeholder\n", encoding="utf-8")
+        (root / "docs/adr/0000-template.md").write_text(
+            "# ADR-XXXX — Template\
+- **Status:** Proposed\
+"
+            "- **Superseded by:** None\
+## Context\
+A\
+"
+            "## Decision\
+B\
+## Consequences\
+C\
+",
+            encoding="utf-8",
+        )
         return temporary, root
 
     def test_missing_file_is_reported(self):
